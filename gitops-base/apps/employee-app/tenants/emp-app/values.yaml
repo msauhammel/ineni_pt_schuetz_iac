@@ -1,0 +1,20 @@
+namespace: employeeapp
+backend:
+  name: backend
+  namespace: backend
+  image:
+    repository: lzainzinger02/cart-service
+  service:
+    port: 3002
+    nodePort: 30002
+
+frontend:
+  fullnameOverride: frontend
+  namespace: employeeapp
+  image:
+    repository: lzainzinger02/frontend
+    tag: "1.0.0"
+  service:
+    port: 3000 # This is the service's port (what the Ingress connects to)
+    nodePort: 30000
+  containerPort: 3000 # <-- ADDED: This is the port your frontend application listens on inside its container

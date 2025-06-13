@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: employeeapp-appset
+  namespace: argocd
+spec:
+  generators:
+    - git:
+        repoURL: https://github.com/msauhammel/ineni_pt_schuetz_iac.git
+        revision: feature/argo-cd-setup
+        files:
+          - path: "gitops-base/apps/employee-app/tenants/*/values.yaml"
+  template:
+    metadata:
+      name: "employeeapp-{{path.basename}}"
+    spec:
+      project: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+          - PrunePropagationPolicy=foreground
+      sources:
+        - repoURL: https://github.com/msauhammel/ineni_pt_schuetz_ui.git
+          targetRevision: 1.0.0
+          path: charts
+          helm:
+            valueFiles:
+              - $values/gitops-base/apps/employee-app/tenants/{{path.basename}}/values.yaml
+        - repoURL: https://github.com/msauhammel/ineni_pt_schuetz_backend.git
+          targetRevision: 1.0.0
+          path: charts
+          helm:
+            valueFiles:
+              - $values/gitops-base/apps/employee-app/tenants/{{path.basename}}/values.yaml
+            env:
+            - name: DATABASE_CONNECTION_URI
+              valueFrom:
+                secretKeyRef:
+                  name: pg-secret
+                  key: connection_string
+        - repoURL: https://github.com/msauhammel/ineni_pt_schuetz_iac.git
+          targetRevision: feature/argo-cd-setup
+          ref: values
+      destination:
+        namespace: "{{path.basename}}"
+        server: https://kubernetes.default.svc

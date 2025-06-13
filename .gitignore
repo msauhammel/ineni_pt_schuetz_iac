@@ -1,0 +1,4 @@
+terraform/.terraform/
+terraform/terraform.tfvars
+terraform/kubeconfig
+terraform/terraform.tfstate.backup
