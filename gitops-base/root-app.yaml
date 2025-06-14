@@ -14,7 +14,7 @@ spec:
       recurse: true
     # The path within the repo where Argo CD should look for app manifests.
     # It will recursively search this directory.
-    path: gitops-base
+    path: gitops-base/apps/employee-app
     
     # The branch, tag, or commit to track.
     # targetRevision: HEAD
