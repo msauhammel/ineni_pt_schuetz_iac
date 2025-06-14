@@ -31,3 +31,7 @@ resource "local_sensitive_file" "kubeconfig" {
 output "sks_cluster_endpoint" {
   value = exoscale_sks_cluster.employee_app.endpoint
 }
+
+resource "kubernetes_manifest" "argocd_root_app" {
+  manifest = yamldecode(file("../gitops-base/root-app.yaml"))
+}
