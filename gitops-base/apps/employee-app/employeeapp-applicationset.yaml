@@ -32,7 +32,7 @@ spec:
       sources:
         - repoURL: https://github.com/msauhammel/ineni_pt_schuetz_ui.git
           targetRevision: main
-          path: charts
+          path: helm/employee-frontend-chart
           helm:
             valueFiles:
               # Use the tenant-specific values from the IaC repo
@@ -40,7 +40,7 @@ spec:
 
         - repoURL: https://github.com/msauhammel/ineni_pt_schuetz_backend.git
           targetRevision: main
-          path: charts
+          path: helm/department-chart
           helm:
             valueFiles:
               - $values/gitops-base/apps/employee-app/tenants/{{path.basename}}/values.yaml
