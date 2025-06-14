@@ -26,6 +26,6 @@ resource "helm_release" "argo_cd" {
   ]
 
   depends_on = [
-    exoscale_sks_nodepool.default
+    helm_release.argo_cd
   ]
 }
