@@ -8,7 +8,7 @@ spec:
     - git:
         # This is your IaC repo where tenant configs live:
         repoURL: https://github.com/msauhammel/ineni_pt_schuetz_iac.git
-        revision: main
+        revision: HEAD
         files:
           - path: "gitops-base/apps/employee-app/tenants/*/values.yaml"
 
@@ -31,7 +31,7 @@ spec:
       # This tells Argo CD what to deploy for each tenant:
       sources:
         - repoURL: https://github.com/msauhammel/ineni_pt_schuetz_ui.git
-          targetRevision: main
+          targetRevision: HEAD
           path: helm/employee-frontend-chart
           helm:
             valueFiles:
@@ -39,7 +39,7 @@ spec:
               - $values/gitops-base/apps/employee-app/tenants/{{path.basename}}/values.yaml
 
         - repoURL: https://github.com/msauhammel/ineni_pt_schuetz_backend.git
-          targetRevision: main
+          targetRevision: HEAD
           path: helm/department-chart
           helm:
             valueFiles:
@@ -53,7 +53,7 @@ spec:
 
         # Required: link to the IaC repo to pull values.yaml dynamically
         - repoURL: https://github.com/msauhammel/ineni_pt_schuetz_iac.git
-          targetRevision: main
+          targetRevision: HEAD
           ref: values
 
       # Destination: deploy each tenant in its own namespace
