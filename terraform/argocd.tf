@@ -26,6 +26,6 @@ resource "helm_release" "argo_cd" {
   ]
 
   depends_on = [
-    local_sensitive_file.kubeconfig
+    exoscale_sks_nodepool.default
   ]
 }
