@@ -12,6 +12,10 @@ terraform {
   }
 }
 
+provider "kubernetes" {
+  config_path = local_sensitive_file.kubeconfig.filename
+}
+
 provider "exoscale" {
   secret = var.exoscale_secret
   key    = var.exoscale_key

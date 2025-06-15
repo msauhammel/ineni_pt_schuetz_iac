@@ -24,8 +24,7 @@ resource "helm_release" "argo_cd" {
       app_namespace = local.app_namespace
     })
   ]
-
   depends_on = [
-    helm_release.argo_cd
+    local_sensitive_file.kubeconfig
   ]
 }
