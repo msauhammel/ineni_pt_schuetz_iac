@@ -1,3 +1,7 @@
+provider "kubernetes" {
+  config_path = local_sensitive_file.kubeconfig.filename
+}
+
 resource "kubernetes_secret" "pg_secret" {
   metadata {
     name      = "pg-secret"

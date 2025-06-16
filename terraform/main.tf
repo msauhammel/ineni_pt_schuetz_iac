@@ -26,6 +26,7 @@ resource "exoscale_sks_kubeconfig" "employee_app_kubeconfig" {
 resource "local_sensitive_file" "kubeconfig" {
   filename = "./kubeconfig"
   content  = exoscale_sks_kubeconfig.employee_app_kubeconfig.kubeconfig
+  file_permission = "0600"
 }
 
 output "sks_cluster_endpoint" {

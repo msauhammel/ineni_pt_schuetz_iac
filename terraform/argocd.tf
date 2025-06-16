@@ -25,6 +25,6 @@ resource "helm_release" "argo_cd" {
     })
   ]
   depends_on = [
-    local_sensitive_file.kubeconfig
+    helm_release.argo_cd
   ]
 }
