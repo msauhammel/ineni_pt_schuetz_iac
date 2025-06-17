@@ -1,5 +1,5 @@
 provider "kubernetes" {
-  config_path = local_sensitive_file.kubeconfig.filename
+  config_path = "../kubeconfig"
 }
 
 resource "kubernetes_secret" "pg_secret" {

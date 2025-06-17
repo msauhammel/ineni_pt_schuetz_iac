@@ -20,8 +20,10 @@ provider "exoscale" {
   key    = var.exoscale_key
 }
 
-provider "helm" {
-  kubernetes {
-    config_path = "kubeconfig"
-  }
+provider "kubernetes" {
+  config_path = "../kubeconfig"
+}
+
+resource "kubernetes_manifest" "argocd_root_app" {
+  manifest = yamldecode(file("../../gitops-base/root-app.yaml"))
 }

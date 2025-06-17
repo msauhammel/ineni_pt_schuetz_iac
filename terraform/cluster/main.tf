@@ -24,15 +24,11 @@ resource "exoscale_sks_kubeconfig" "employee_app_kubeconfig" {
 }
 
 resource "local_sensitive_file" "kubeconfig" {
-  filename = "./kubeconfig"
+  filename = "../kubeconfig"
   content  = exoscale_sks_kubeconfig.employee_app_kubeconfig.kubeconfig
   file_permission = "0600"
 }
 
 output "sks_cluster_endpoint" {
   value = exoscale_sks_cluster.employee_app.endpoint
-}
-
-resource "kubernetes_manifest" "argocd_root_app" {
-  manifest = yamldecode(file("../gitops-base/root-app.yaml"))
 }

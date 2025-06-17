@@ -5,22 +5,12 @@ metadata:
   namespace: argocd
 spec:
   generators:
-    - matrix:
-      generators:
-        - git:
-          # This is your IaC repo where tenant configs live:
-          repoURL: https://github.com/msauhammel/ineni_pt_schuetz_iac.git
-          revision: HEAD
-          files:
-            - path: "gitops-base/apps/employee-app/tenants/*/values.yaml"
-        - list:
-          elements:
-            - appType: frontend
-              repoUrl: https://github.com/msauhammel/ineni_pt_schuetz_ui.git
-              path: helm/employee-frontend-chart
-            - appType: backend
-              repoUrl: https://github.com/msauhammel/ineni_pt_schuetz_backend.git
-              path: helm/department-chart
+    - git:
+        # This is your IaC repo where tenant configs live:
+        repoURL: https://github.com/msauhammel/ineni_pt_schuetz_iac.git
+        revision: HEAD
+        files:
+          - path: "gitops-base/apps/employee-app/tenants/*/values.yaml"
 
   template:
     metadata:
@@ -39,14 +29,27 @@ spec:
           - PrunePropagationPolicy=foreground
 
       # This tells Argo CD what to deploy for each tenant:
-      source:
-        - repoURL: "{{repoUrl}}"
+      sources:
+        - repoURL: https://github.com/msauhammel/ineni_pt_schuetz_ui.git
           targetRevision: HEAD
-          path: "{{path}}"
+          path: helm/employee-frontend-chart
           helm:
             valueFiles:
               # Use the tenant-specific values from the IaC repo
               - $values/gitops-base/apps/employee-app/tenants/{{path.basename}}/values.yaml
+
+        - repoURL: https://github.com/msauhammel/ineni_pt_schuetz_backend.git
+          targetRevision: HEAD
+          path: helm/department-chart
+          helm:
+            valueFiles:
+              - $values/gitops-base/apps/employee-app/tenants/{{path.basename}}/values.yaml
+            env:
+              - name: spring.datasource.url
+                valueFrom:
+                  secretKeyRef:
+                    name: pg-secret
+                    key: connection_string
 
         # Required: link to the IaC repo to pull values.yaml dynamically
         - repoURL: https://github.com/msauhammel/ineni_pt_schuetz_iac.git
