@@ -11,14 +11,7 @@ spec:
         revision: HEAD
         files:
           - path: "gitops-base/apps/employee-app/tenants/*/values.yaml"
-    - list:
-        elements:
-          - name: frontend
-            repoURL: https://github.com/msauhammel/ineni_pt_schuetz_ui.git
-            path: helm/employee-frontend-chart
-          - name: backend
-            repoURL: https://github.com/msauhammel/ineni_pt_schuetz_backend.git
-            path: helm/department-chart
+
   template:
     metadata:
       # Each tenant's Application will be named dynamically
@@ -36,14 +29,27 @@ spec:
           - PrunePropagationPolicy=foreground
 
       # This tells Argo CD what to deploy for each tenant:
-      source:
-          repoURL: '{{repoURL}}'
+      sources:
+        - repoURL: https://github.com/msauhammel/ineni_pt_schuetz_ui.git
           targetRevision: HEAD
-          path: '{{path}}'
+          path: helm/employee-frontend-chart
           helm:
             valueFiles:
               # Use the tenant-specific values from the IaC repo
               - $values/gitops-base/apps/employee-app/tenants/{{path.basename}}/values.yaml
+
+        - repoURL: https://github.com/msauhammel/ineni_pt_schuetz_backend.git
+          targetRevision: HEAD
+          path: helm/department-chart
+          helm:
+            valueFiles:
+              - $values/gitops-base/apps/employee-app/tenants/{{path.basename}}/values.yaml
+            env:
+              - name: spring.datasource.url
+                valueFrom:
+                  secretKeyRef:
+                    name: pg-secret
+                    key: connection_string
 
         # Required: link to the IaC repo to pull values.yaml dynamically
         - repoURL: https://github.com/msauhammel/ineni_pt_schuetz_iac.git
@@ -53,4 +59,4 @@ spec:
       # Destination: deploy each tenant in its own namespace
       destination:
         server: https://kubernetes.default.svc
-        namespace: "{{path.basename}}{{name}}"
+        namespace: "{{path.basename}}"
