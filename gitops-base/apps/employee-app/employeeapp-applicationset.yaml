@@ -37,7 +37,7 @@ spec:
 
       # This tells Argo CD what to deploy for each tenant:
       source:
-        - repoURL: '{{repoURL}}'
+          repoURL: '{{repoURL}}'
           targetRevision: HEAD
           path: '{{path}}'
           helm:
