@@ -1,7 +1,7 @@
 resource "exoscale_dbaas" "pg" {
   name = "employee-db"
   type = "pg"
-  zone = exoscale_sks_cluster.employee_app.zone
+  zone = var.exoscale_zone
   plan = "hobbyist-2"
 
   termination_protection = false
