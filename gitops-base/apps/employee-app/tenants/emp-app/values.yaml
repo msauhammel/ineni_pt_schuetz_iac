@@ -20,20 +20,3 @@ employee-frontend-chart:
     port: 3000 # This is the service's port (what the Ingress connects to)
     nodePort: 30000
   containerPort: 3000 # <-- ADDED: This is the port your frontend application listens on inside its container
-
-oauth2-proxy:
-  fullnameOverride: oauth-proxy
-  namespace: employeeapp
-  config:
-    clientID: "YOUR_CLIENT_ID"
-    clientSecret: "YOUR_CLIENT_SECRET"
-    cookieSecret: "YOUR_COOKIE_SECRET"
-    provider: github
-    redirectURL: "https://employeeapp.YOUR_DOMAIN/oauth2/callback"
-    emailDomains:
-      - "*"
-    upstreams:
-      - http://frontend.employeeapp.svc.cluster.local:3000
-
-  service:
-    type: LoadBalancer
