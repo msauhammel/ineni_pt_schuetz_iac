@@ -53,15 +53,19 @@ jobs:
       - name: Run OpenTofu Apply        # Step 6: Auto apply on push to main
         run: |
          cd cluster
+         tofu plan
          tofu apply -auto-approve
          
          cd ../db
+         tofu plan
          tofu apply -auto-approve
          
          cd ../workloads
+         tofu plan
          tofu apply -auto-approve
          
          cd ../rootapp
+         tofu plan
          tofu apply -auto-approve
       
       # Automatically apply tofu changes when code is pushed to main
