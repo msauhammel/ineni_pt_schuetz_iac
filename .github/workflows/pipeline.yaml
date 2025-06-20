@@ -1,0 +1,37 @@
+name: tofu Plan & Apply  # Name of the workflow
+
+ # Trigger the workflow on pull requests and pushes to the main branch
+on:
+  # pull_request:              # Trigger on PRs targeting main
+  #   branches: [ main ]
+  push:                      # Trigger on commits pushed to main
+    branches: [ main ]
+
+defaults:
+  run:
+    working-directory: ./
+
+ # Define the job for tofu operations
+jobs:
+  tofu:                 # Define a job called 'tofu'
+    runs-on: ubuntu-latest   # Use latest Ubuntu runner
+
+    # Set environment variables required for AWS and Exoscale access
+    env:                     # Define environment variables from GitHub secrets
+      EXOSCALE_API_KEY: ${{ secrets.EXOSCALE_API_KEY }}
+      EXOSCALE_API_SECRET: ${{ secrets.EXOSCALE_API_SECRET }}
+
+    # List of steps to set up tools, validate cluster access, and run tofu plans and applies
+    steps:
+      - name: Checkout repository  # Step 1: Checkout code
+        uses: actions/checkout@v4
+
+      # Install the specified version of OpenTofu CLI
+      - name: Install OpenTofu     # Step 2: Install OpenTofu CLI
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.6.2
+
+      # Automatically apply tofu changes when code is pushed to main
+      - name: Run OpenTofu Apply        # Step 6: Auto apply on push to main
+        run: sh apply.sh
