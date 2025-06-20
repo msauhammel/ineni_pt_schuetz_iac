@@ -9,7 +9,7 @@ on:
 
 defaults:
   run:
-    working-directory: ./
+    working-directory: ./terraform
 
  # Define the job for tofu operations
 jobs:
@@ -34,10 +34,36 @@ jobs:
         with:
           tofu_version: 1.6.2
 
-      # PWD
-      - name: Print working directory
-        run: pwd
-      
+      # Initialize tofu
+      - name: Tofu init
+        run: |
+         cd cluster
+         tofu init
+         
+         cd ../db
+         tofu init
+         
+         cd ../workloads
+         tofu init
+         
+         cd ../rootapp
+         tofu init
+
       # Automatically apply tofu changes when code is pushed to main
       - name: Run OpenTofu Apply        # Step 6: Auto apply on push to main
-        run: sh apply.sh
+        run: |
+         cd cluster
+         tofu apply -auto-approve
+         
+         cd ../db
+         tofu apply -auto-approve
+         
+         cd ../workloads
+         tofu apply -auto-approve
+         
+         cd ../rootapp
+         tofu apply -auto-approve
+      
+      # Automatically apply tofu changes when code is pushed to main
+      # - name: Run OpenTofu Apply        # Step 6: Auto apply on push to main
+      #  run: sh apply.sh
