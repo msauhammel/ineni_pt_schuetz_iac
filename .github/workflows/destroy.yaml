@@ -1,0 +1,78 @@
+# GitHub Actions workflow to manually destroy infrastructure using OpenTofu
+name: OpenTofu Destroy
+# Trigger configuration for manual workflow dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_destroy:
+        description: "Type YES to confirm destruction"
+        required: true
+
+defaults:
+  run:
+    working-directory: ./terraform
+# Define the job to run the OpenTofu destroy process
+jobs:
+  destroy:
+    # Use the latest Ubuntu runner environment
+    runs-on: ubuntu-latest
+
+    # Set environment variables and secrets needed for the job
+    env:
+      TF_VAR_exoscale_key: ${{ secrets.EXOSCALE_KEY }}
+      TF_VAR_exoscale_secret: ${{ secrets.EXOSCALE_SECRET }}
+      TF_VAR_pg_admin: ${{ secrets.PG_ADMIN }}
+      TF_VAR_pg_password: ${{ secrets.PG_PASSWORD }}
+      
+    # Steps to verify confirmation, configure tools, validate access, and run tofu destroy
+    steps:
+      - name: Install Exoscale CLI
+        # Install the Exoscale CLI to interact with SKS (Scalable Kubernetes Service)
+        continue-on-error: true
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | sh
+
+      - name: Fetch SKS kubeconfig and store
+        # Fetch the kubeconfig for the first SKS cluster and store it for kubectl use
+        continue-on-error: true
+        run: |
+          CLUSTER_NAME=$(exo compute sks list --zone at-vie-2 --output-format json | jq -r '.[0].name')
+          exo compute sks kubeconfig $CLUSTER_NAME admin --zone at-vie-2 > kubeconfig
+          chmod 600 kubeconfig
+          echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
+
+      - name: Install OpenTofu
+        # Set up the specified version of OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.6.2
+
+      - name: Initialize OpenTofu
+        # Run tofu init to initialize the Terraform/OpenTofu working directory
+        run: |
+          cd cluster
+          tofu init
+         
+          cd ../db
+          tofu init
+          
+          cd ../workloads
+          tofu init
+          
+          cd ../rootapp
+          tofu init
+
+      - name: Destroy with OpenTofu
+        # Run tofu destroy to remove the Argo CD Helm release and all other resources
+        run: |
+          cd rootapp
+          tofu destroy -auto-approve
+
+          cd ../workloads
+          tofu destroy -auto-approve
+
+          cd ../db
+          tofu destroy -auto-approve
+
+          cd ../cluster
+          tofu destroy -auto-approve
