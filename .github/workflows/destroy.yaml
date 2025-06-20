@@ -23,6 +23,8 @@ jobs:
       TF_VAR_exoscale_secret: ${{ secrets.EXOSCALE_SECRET }}
       TF_VAR_pg_admin: ${{ secrets.PG_ADMIN }}
       TF_VAR_pg_password: ${{ secrets.PG_PASSWORD }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.EXOSCALE_KEY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.EXOSCALE_SECRET }}
       
     # Steps to verify confirmation, configure tools, validate access, and run tofu destroy
     steps:
