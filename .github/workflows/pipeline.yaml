@@ -16,10 +16,12 @@ jobs:
   tofu:                 # Define a job called 'tofu'
     runs-on: ubuntu-latest   # Use latest Ubuntu runner
 
-    # Set environment variables required for AWS and Exoscale access
+    # Set environment variables required for Exoscale access
     env:                     # Define environment variables from GitHub secrets
-      EXOSCALE_API_KEY: ${{ secrets.EXOSCALE_API_KEY }}
-      EXOSCALE_API_SECRET: ${{ secrets.EXOSCALE_API_SECRET }}
+      EXOSCALE_KEY: ${{ secrets.EXOSCALE_KEY }}
+      EXOSCALE_SECRET: ${{ secrets.EXOSCALE_SECRET }}
+      PG_ADMIN: ${{ secrets.PG_ADMIN }}
+      PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
 
     # List of steps to set up tools, validate cluster access, and run tofu plans and applies
     steps:
