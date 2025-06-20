@@ -50,9 +50,10 @@ jobs:
         run: |
           export EXOSCALE_API_KEY="${{ secrets.EXOSCALE_KEY }}"
           export EXOSCALE_API_SECRET="${{ secrets.EXOSCALE_SECRET }}"
-          
+
           CLUSTER_NAME=$(exo compute sks list --zone at-vie-2 --output-format json | jq -r '.[0].name')
-          exo compute sks kubeconfig $CLUSTER_NAME admin --zone at-vie-2 > kubeconfig
+          exo compute sks kubeconfig "$CLUSTER_NAME" admin --zone at-vie-2 | tail -n +2 > kubeconfig
+
           chmod 600 kubeconfig
           echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
 
