@@ -50,6 +50,7 @@ jobs:
       - name: Initialize OpenTofu
         # Run tofu init to initialize the Terraform/OpenTofu working directory
         run: |
+          pwd
           cd cluster
           tofu init
          
