@@ -4,8 +4,8 @@ name: tofu Plan & Apply  # Name of the workflow
 on:
   # pull_request:              # Trigger on PRs targeting main
   #   branches: [ main ]
-  push:                      # Trigger on commits pushed to main
-    branches: [ main ]
+  # push:                      # Trigger on commits pushed to main
+  #  branches: [ main ]
 
 defaults:
   run:
