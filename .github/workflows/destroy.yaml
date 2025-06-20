@@ -26,6 +26,16 @@ jobs:
       
     # Steps to verify confirmation, configure tools, validate access, and run tofu destroy
     steps:
+      - name: Check confirmation input
+        if: ${{ github.event.inputs.confirm_destroy != 'YES' }}
+        run: |
+          echo "❌ Confirmation failed. You must type YES to destroy."
+          exit 1
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+    
       - name: Install Exoscale CLI
         # Install the Exoscale CLI to interact with SKS (Scalable Kubernetes Service)
         continue-on-error: true
