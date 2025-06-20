@@ -18,10 +18,11 @@ jobs:
 
     # Set environment variables required for Exoscale access
     env:                     # Define environment variables from GitHub secrets
-      EXOSCALE_KEY: ${{ secrets.EXOSCALE_KEY }}
-      EXOSCALE_SECRET: ${{ secrets.EXOSCALE_SECRET }}
-      PG_ADMIN: ${{ secrets.PG_ADMIN }}
-      PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
+      TF_VAR_exoscale_key: ${{ secrets.EXOSCALE_KEY }}
+      TF_VAR_exoscale_secret: ${{ secrets.EXOSCALE_SECRET }}
+      TF_VAR_cluster_name: "employee-sks-cluster"
+      TF_VAR_PG_ADMIN: ${{ secrets.PG_ADMIN }}
+      TF_VAR_PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
 
     # List of steps to set up tools, validate cluster access, and run tofu plans and applies
     steps:
