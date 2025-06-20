@@ -21,8 +21,8 @@ jobs:
       TF_VAR_exoscale_key: ${{ secrets.EXOSCALE_KEY }}
       TF_VAR_exoscale_secret: ${{ secrets.EXOSCALE_SECRET }}
       TF_VAR_cluster_name: "employee-sks-cluster"
-      TF_VAR_PG_ADMIN: ${{ secrets.PG_ADMIN }}
-      TF_VAR_PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
+      TF_VAR_pg_admin: ${{ secrets.PG_ADMIN }}
+      TF_VAR_pg_password: ${{ secrets.PG_PASSWORD }}
 
     # List of steps to set up tools, validate cluster access, and run tofu plans and applies
     steps:
