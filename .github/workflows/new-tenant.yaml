@@ -1,0 +1,107 @@
+# .github/workflows/new-tenant.yml
+
+name: 'New Tenant Setup'
+
+on:
+  workflow_dispatch:
+    inputs:
+      tenant_name:
+        description: 'The name of the new tenant (e.g., tenant2, client-x). Use lowercase letters, numbers, and hyphens only.'
+        required: true
+        type: string
+
+jobs:
+  create-tenant-files:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v4
+
+      - name: 'Validate Tenant Name'
+        env:
+          TENANT_NAME: ${{ github.event.inputs.tenant_name }}
+        run: |
+          if [[ ! "$TENANT_NAME" =~ ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$ ]]; then
+            echo "Error: Tenant name '$TENANT_NAME' is invalid."
+            echo "Please use only lowercase letters, numbers, and hyphens. It must start and end with an alphanumeric character."
+            exit 1
+          fi
+          echo "Tenant name is valid."
+
+      - name: 'Create Tenant Directory and values.yaml'
+        env:
+          TENANT_NAME: ${{ github.event.inputs.tenant_name }}
+        run: |
+          # Define the directory path
+          TENANT_DIR="gitops-base/apps/employee-app/tenants/$TENANT_NAME"
+          
+          # Create the directory
+          mkdir -p "$TENANT_DIR"
+          echo "Created directory: $TENANT_DIR"
+          
+          # Create the values.yaml file
+          cat > "$TENANT_DIR/values.yaml" << EOF
+          namespace: ${TENANT_NAME}
+
+          department-chart:
+            name: backend
+            namespace: ${TENANT_NAME}
+            image:
+              repository: ghcr.io/msauhammel/department-service
+              tag: "v0.1.1"
+            service:
+              port: 3002
+              nodePort: 30002
+
+          employee-frontend-chart:
+            fullnameOverride: frontend
+            namespace: ${TENANT_NAME}
+            image:
+              repository: ghcr.io/msauhammel/employee-frontend
+              tag: "v0.1.1"
+            service:
+              port: 3000
+              nodePort: 30000
+            containerPort: 3000
+          EOF
+
+          echo "Created $TENANT_DIR/values.yaml"
+
+      - name: 'Commit and Push to a New Branch'
+        env:
+          TENANT_NAME: ${{ github.event.inputs.tenant_name }}
+        run: |
+          BRANCH_NAME="feat/add-tenant-$TENANT_NAME"
+          
+          # Configure Git
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions@github.com"
+          
+          # Create and switch to a new branch
+          git checkout -b "$BRANCH_NAME"
+          
+          # Add the new files
+          git add "gitops-base/apps/employee-app/tenants/$TENANT_NAME/values.yaml"
+          
+          # Commit the changes
+          git commit -m "feat(tenant): Add new tenant '$TENANT_NAME'"
+          
+          # Push the new branch to the repository
+          # This will fail if a branch with the same name already exists.
+          git push origin "$BRANCH_NAME"
+          
+          echo "Successfully pushed changes to branch: $BRANCH_NAME"
+          echo "You can now create a pull request from this branch to merge the new tenant files."
+        
+      - name: 'Create Pull Request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TENANT_NAME: ${{ github.event.inputs.tenant_name }}
+        run: |
+          BRANCH_NAME="feat/add-tenant-$TENANT_NAME"
+          gh pr create \
+            --base main \
+            --head "$BRANCH_NAME" \
+            --title "feat(tenant): Add new tenant '$TENANT_NAME'" \
+            --body "This PR adds the configuration files for the new tenant: **$TENANT_NAME**. Please review and merge to deploy."
