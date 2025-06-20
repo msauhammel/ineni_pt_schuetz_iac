@@ -4,13 +4,11 @@ terraform {
     key                         = "terraform.tfstate"
     region                      = "at-vie-2"
     endpoint                    = "https://sos-at-vie-2.exo.io"  # Exoscale S3 endpoint
-    access_key                  = var.exoscale_key
-    secret_key                  = var.exoscale_secret
     skip_region_validation      = true
     skip_credentials_validation = true
     force_path_style            = true
   }
-  
+
   required_providers {
     exoscale = {
       source  = "exoscale/exoscale"
