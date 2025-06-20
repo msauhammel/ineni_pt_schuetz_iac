@@ -41,7 +41,12 @@ jobs:
         continue-on-error: true
         run: |
           curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | sh
-
+      - name: Configure Exoscale CLI
+        continue-on-error: true
+        run: |
+          export EXOSCALE_API_KEY=${{ secrets.EXOSCALE_KEY }}
+          export EXOSCALE_API_SECRET=${{ secrets.EXOSCALE_SECRET }}
+          exo vm list
       - name: Fetch SKS kubeconfig and store
         # Fetch the kubeconfig for the first SKS cluster and store it for kubectl use
         continue-on-error: true
