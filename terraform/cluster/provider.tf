@@ -3,10 +3,9 @@ terraform {
     bucket                      = "inenp-state"
     key                         = "terraform.tfstate"
     region                      = "at-vie-2"
-    endpoint                    = "https://sos-at-vie-2.exo.io"  # Exoscale S3 endpoint
+    force_path_style            = true
     skip_region_validation      = true
     skip_credentials_validation = true
-    force_path_style            = true
   }
 
   required_providers {
