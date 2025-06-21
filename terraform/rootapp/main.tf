@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket                      = "inenp-state"
-    key                         = "cluster/terraform.tfstate"
+    key                         = "rootapp/terraform.tfstate"
     endpoint                    = "https://sos-at-vie-2.exo.io"
     region                      = "at-vie-2"
     force_path_style            = true
