@@ -1,8 +1,8 @@
-namespace: employeeapp
+namespace: default
 
 department-chart:
   name: backend
-  namespace: employeeapp
+  namespace: default
   image:
     repository: ghcr.io/msauhammel/department-service
     tag: "v0.1.1"
@@ -12,7 +12,7 @@ department-chart:
 
 employee-frontend-chart:
   fullnameOverride: frontend
-  namespace: employeeapp
+  namespace: default
   image:
     repository: ghcr.io/msauhammel/employee-frontend
     tag: "v0.1.1"
