@@ -96,7 +96,7 @@ jobs:
           set -e
           for tenant_path in tenants/*; do
             if [ -d "$tenant_path" ]; then
-              namespace=$("$tenant_path")
+              namespace=$(basename "$tenant_path")
               echo "🔑 Copying secret to namespace: $namespace"
 
               # Create namespace if it doesn't exist
