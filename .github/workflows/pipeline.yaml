@@ -6,6 +6,7 @@ on:
   #   branches: [ main ]
  push:                      # Trigger on commits pushed to main
   branches: [ main ]
+ workflow_dispatch:
 
 defaults:
   run:
