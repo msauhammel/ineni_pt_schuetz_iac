@@ -77,6 +77,12 @@ jobs:
          tofu plan
          tofu apply -auto-approve
 
+      - name: Install Exoscale CLI
+        # Install the Exoscale CLI to interact with SKS (Scalable Kubernetes Service)
+        continue-on-error: true
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | sh
+
       - name: Fetch SKS kubeconfig and store
         # Fetch the kubeconfig for the first SKS cluster and store it for kubectl use
         continue-on-error: true
@@ -100,7 +106,7 @@ jobs:
               echo "🔑 Copying secret to namespace: $namespace"
 
               # Create namespace if it doesn't exist
-              # kubectl get ns "$namespace" >/dev/null 2>&1 || kubectl create ns "$namespace"
+              # kubectl --kubeconfig=../../../kubeconfig get ns "$namespace" >/dev/null 2>&1 || kubectl create ns "$namespace"
 
               # Copy the secret
               kubectl get secret pg-secret -n default -o yaml \
