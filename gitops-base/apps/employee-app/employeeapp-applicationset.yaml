@@ -44,22 +44,12 @@ spec:
           helm:
             valueFiles:
               - $values/gitops-base/apps/employee-app/tenants/{{path.basename}}/values.yaml
-            parameters:
-              - name: spring.datasource.url
-                valueFrom:
-                  secretKeyRef:
-                    name: pg-secret
-                    key: connection_string
-              - name: spring.datasource.username
-                value: admin
-              - name: spring.datasource.password
-                value: admin1234
           env:
             - name: SPRING_DATASOURCE_URL
               valueFrom:
               secretKeyRef:
-              name: pg-secret
-              key: connection_string
+                name: pg-secret
+                key: connection_string
             #- name: SPRING_DATASOURCE_URL
             #  value: jdbc:postgres://admin:admin1234@employee-db-exoscale-c35be429-f42a-4033-87db-77197725c686.d.aivencloud.com:21699/defaultdb?sslmode=require
             - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
