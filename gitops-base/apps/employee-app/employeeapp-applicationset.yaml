@@ -45,11 +45,13 @@ spec:
             valueFiles:
               - $values/gitops-base/apps/employee-app/tenants/{{path.basename}}/values.yaml
             env:
+              #- name: SPRING_DATASOURCE_URL
+              #  valueFrom:
+              #    secretKeyRef:
+              #      name: pg-secret
+              #      key: connection_string
               - name: SPRING_DATASOURCE_URL
-                valueFrom:
-                  secretKeyRef:
-                    name: pg-secret
-                    key: connection_string
+                value: postgres://admin:admin1234@employee-db-exoscale-c35be429-f42a-4033-87db-77197725c686.d.aivencloud.com:21699/defaultdb?sslmode=require
               - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
                 value: org.postgresql.Driver
               - name: SPRING_DATASOURCE_USERNAME
