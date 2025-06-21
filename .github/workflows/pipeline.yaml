@@ -37,6 +37,11 @@ jobs:
         uses: opentofu/setup-opentofu@v1
         with:
           tofu_version: 1.6.2
+      
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.28.0'
 
       # Initialize tofu
       - name: Tofu init
@@ -71,6 +76,39 @@ jobs:
          cd ../rootapp
          tofu plan
          tofu apply -auto-approve
+
+      - name: Fetch SKS kubeconfig and store
+        # Fetch the kubeconfig for the first SKS cluster and store it for kubectl use
+        continue-on-error: true
+        run: |
+          export EXOSCALE_API_KEY="${{ secrets.EXOSCALE_KEY }}"
+          export EXOSCALE_API_SECRET="${{ secrets.EXOSCALE_SECRET }}"
+
+          CLUSTER_NAME=$(exo compute sks list --zone at-vie-2 --output-format json | jq -r '.[0].name')
+          exo compute sks kubeconfig "$CLUSTER_NAME" admin --zone at-vie-2 | tail -n +2 > kubeconfig
+
+          chmod 600 kubeconfig
+          echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
+
+      - name: Copy pg-secret to tenants
+        working-directory: gitops-base/apps/employee-app
+        run: |
+          set -e
+          for tenant_path in tenants/*; do
+            if [ -d "$tenant_path" ]; then
+              namespace=$("$tenant_path")
+              echo "🔑 Copying secret to namespace: $namespace"
+
+              # Create namespace if it doesn't exist
+              # kubectl get ns "$namespace" >/dev/null 2>&1 || kubectl create ns "$namespace"
+
+              # Copy the secret
+              kubectl get secret pg-secret -n default -o yaml \
+              | sed "s/namespace: default/namespace: $namespace/" \
+              | kubectl apply -f -
+            fi
+          done
+
       
       # Automatically apply tofu changes when code is pushed to main
       # - name: Run OpenTofu Apply        # Step 6: Auto apply on push to main
