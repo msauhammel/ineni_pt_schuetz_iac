@@ -1,7 +1,13 @@
+resource "kubernetes_namespace" "emp_app" {
+  metadata {
+    name = "emp-app"
+  }
+}
+
 resource "kubernetes_secret" "pg_secret" {
   metadata {
     name      = "pg-secret"
-    namespace = "default"
+    namespace = "emp-app"
   }
 
   data = {
