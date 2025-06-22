@@ -1,11 +1,10 @@
-module "customer1-db" {
+module "main-db" {
   # Path to the module directory
   source = "./modules"
 
   pg_admin = var.pg_admin
   pg_password = var.pg_password
 
-  # (Optional) Override default names
   database_name          = "employee-app"
   kubernetes_namespace   = "emp-app"
 
