@@ -48,6 +48,9 @@ jobs:
         continue-on-error: true
         run: |
           curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | sh
+      
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
 
       # Initialize tofu
       - name: Tofu init
@@ -87,8 +90,9 @@ jobs:
               kubectl get ns "$namespace" >/dev/null 2>&1 || kubectl create ns "$namespace"
 
               # Copy the secret
-              kubectl get secret pg-secret -n default -o yaml \
-              | sed "s/namespace: default/namespace: $namespace/" \
+              kubectl get secret pg-secret -n default -o json \
+              | jq 'del(.metadata.creationTimestamp, .metadata.resourceVersion, .metadata.uid, .metadata.selfLink, .metadata.annotations, .metadata.ownerReferences, .metadata.managedFields)' \
+              | jq '.metadata.namespace = "'$namespace'"' \
               | kubectl apply -f -
             fi
           done
