@@ -7,7 +7,7 @@ resource "kubernetes_secret" "pg_secret" {
   data = {
     username    = var.pg_admin
     password    = var.pg_password
-    connection_string = data.exoscale_database_uri.employee-db.uri
+    connection_string = "jdbc:${data.exoscale_database_uri.employee-db.uri}"
     db_host           = data.exoscale_database_uri.employee-db.host
     db_port           = data.exoscale_database_uri.employee-db.port
   }
