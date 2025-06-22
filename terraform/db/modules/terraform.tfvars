@@ -1,0 +1,5 @@
+exoscale_key    = "EXO3d00cb72fa8ca56285ac44d2"
+exoscale_secret = "WGIGiGYwzwROrkTAedbKIS407vnoZfOl1u_mWitcsp4"
+pg_admin        = "admin"
+pg_password     = "admin1234"
+database_name = "employee-db"

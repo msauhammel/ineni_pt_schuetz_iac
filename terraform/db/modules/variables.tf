@@ -20,11 +20,22 @@ variable "database_name" {
   type        = string
 }
 
+variable "database_user" {
+  type        = string
+  description = "The username for the new PostgreSQL user."
+  default     = "appuser"
+}
+
+variable "kubernetes_namespace" {
+  type        = string
+  description = "The Kubernetes namespace where the secret will be created."
+  default     = "default"
+}
+
 variable "pg_admin" {
   description = "Admin username for PostgreSQL"
   type        = string
   default     = "admin"
-
 }
 
 variable "pg_password" {

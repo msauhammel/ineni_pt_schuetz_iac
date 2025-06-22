@@ -1,7 +1,7 @@
 resource "kubernetes_secret" "pg_secret" {
   metadata {
-    name      = "pg-secret"
-    namespace = "default"
+    name      = var.database_name
+    namespace = var.kubernetes_namespace
   }
 
   data = {

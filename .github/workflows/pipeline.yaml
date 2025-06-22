@@ -37,20 +37,6 @@ jobs:
         uses: opentofu/setup-opentofu@v1
         with:
           tofu_version: 1.6.2
-      
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: 'v1.28.0'
-        
-      - name: Install Exoscale CLI
-        # Install the Exoscale CLI to interact with SKS (Scalable Kubernetes Service)
-        continue-on-error: true
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | sh
-      
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
 
       # Initialize tofu
       - name: Tofu init
@@ -77,25 +63,6 @@ jobs:
          cd ../db
          tofu plan
          tofu apply -auto-approve
-         
-         export KUBECONFIG=$(pwd)/../kubeconfig
-
-         set -e
-          for tenant_path in ../../gitops-base/apps/employee-app/tenants/*; do
-            if [ -d "$tenant_path" ]; then
-              namespace=$(basename "$tenant_path")
-              echo "🔑 Copying secret to namespace: $namespace"
-
-              # Create namespace if it doesn't exist
-              kubectl get ns "$namespace" >/dev/null 2>&1 || kubectl create ns "$namespace"
-
-              # Copy the secret
-              kubectl get secret pg-secret -n default -o json \
-              | jq 'del(.metadata.creationTimestamp, .metadata.resourceVersion, .metadata.uid, .metadata.selfLink, .metadata.annotations, .metadata.ownerReferences, .metadata.managedFields)' \
-              | jq '.metadata.namespace = "'$namespace'"' \
-              | kubectl apply -f -
-            fi
-          done
          
          cd ../workloads
          tofu plan
