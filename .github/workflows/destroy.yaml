@@ -21,6 +21,7 @@ jobs:
     env:
       TF_VAR_exoscale_key: ${{ secrets.EXOSCALE_KEY }}
       TF_VAR_exoscale_secret: ${{ secrets.EXOSCALE_SECRET }}
+      TF_VAR_cluster_name: "employee-sks-cluster"
       TF_VAR_pg_admin: ${{ secrets.PG_ADMIN }}
       TF_VAR_pg_password: ${{ secrets.PG_PASSWORD }}
       AWS_ACCESS_KEY_ID: ${{ secrets.EXOSCALE_KEY }}
@@ -66,7 +67,6 @@ jobs:
       - name: Initialize OpenTofu
         # Run tofu init to initialize the Terraform/OpenTofu working directory
         run: |
-          pwd
           cd cluster
           tofu init
          
@@ -79,17 +79,22 @@ jobs:
           cd ../rootapp
           tofu init
 
-      - name: Destroy with OpenTofu
-        # Run tofu destroy to remove the Argo CD Helm release and all other resources
+      - name: Destroy Rootapp
         run: |
           cd rootapp
           tofu destroy -auto-approve
 
-          cd ../workloads
+      - name: Destroy Workloads
+        run: |
+          cd workloads
           tofu destroy -auto-approve
 
-          cd ../db
+      - name: Destroy DB
+        run: |
+          cd db
           tofu destroy -auto-approve
 
-          cd ../cluster
+      - name: Destroy Cluster
+        run: |
+          cd cluster
           tofu destroy -auto-approve
