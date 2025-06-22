@@ -105,7 +105,7 @@ jobs:
           
           # Add the new files
           git add "gitops-base/apps/employee-app/tenants/$TENANT_NAME/values.yaml"
-          git add "terraform/db$TENANT_NAME.tf/"
+          git add "terraform/db/$TENANT_NAME.tf"
           
           # Commit the changes
           git commit -m "feat(tenant): Add new tenant '$TENANT_NAME'"
