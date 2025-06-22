@@ -14,18 +14,3 @@ terraform {
     }
   }
 }
-
-provider "exoscale" {
-  secret = var.exoscale_secret
-  key    = var.exoscale_key
-}
-
-provider "helm" {
-  kubernetes {
-    config_path = "../kubeconfig"
-  }
-}
-
-provider "kubernetes" {
-  config_path = "../kubeconfig"
-}

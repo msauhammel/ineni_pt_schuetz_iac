@@ -63,8 +63,8 @@ jobs:
       - name: Run OpenTofu Apply (DB)
         run: |
          cd db
-         TF_LOG=DEBUG tofu plan
-         TF_LOG=DEBUG tofu apply -auto-approve
+         tofu plan
+         tofu apply -auto-approve
 
       - name: Run OpenTofu Apply (Workloads)
         run: |

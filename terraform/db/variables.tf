@@ -18,6 +18,7 @@ variable "exoscale_zone" {
 variable "database_name" {
   description = "PostgreSQL Databasename"
   type        = string
+  default     = "employee-db"
 }
 
 variable "pg_admin" {
