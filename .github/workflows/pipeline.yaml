@@ -93,7 +93,7 @@ jobs:
             fi
           done
          
-         cd ../../../terraform/workloads
+         cd ../workloads
          tofu plan
          tofu apply -auto-approve
          
