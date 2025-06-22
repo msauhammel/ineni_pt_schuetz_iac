@@ -75,7 +75,7 @@ jobs:
          tofu plan
          tofu apply -auto-approve
          
-         echo "KUBECONFIG=$(pwd)/../kubeconfig" >> $GITHUB_ENV
+         export KUBECONFIG=$(pwd)/../kubeconfig
 
          set -e
           for tenant_path in ../../gitops-base/apps/employee-app/tenants/*; do
