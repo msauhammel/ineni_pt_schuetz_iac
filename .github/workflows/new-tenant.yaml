@@ -67,6 +67,28 @@ jobs:
           EOF
 
           echo "Created $TENANT_DIR/values.yaml"
+      
+      - name: Create Tenant DB Module
+        env:
+          TENANT_NAME: ${{ github.event.inputs.tenant_name }}
+        run: |
+          TF_FILE="terraform/db/${TENANT_NAME}.tf"
+          cat > "$TF_FILE" << EOF
+
+          module "${TENANT_NAME}-db" {
+            # Path to the module directory
+            source = "./modules"
+
+            pg_admin = var.pg_admin
+            pg_password = var.pg_password
+
+            # (Optional) Override default names
+            database_name          = "${TENANT_NAME}"
+            kubernetes_namespace   = "${TENANT_NAME}"
+          }
+
+          EOF
+          echo "Created Terraform file: $TF_FILE"
 
       - name: 'Commit and Push to a New Branch'
         env:

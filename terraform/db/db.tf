@@ -7,7 +7,6 @@ module "customer1-db" {
 
   # (Optional) Override default names
   database_name          = "employee-app"
-  database_user          = "appuser"
   kubernetes_namespace   = "emp-app"
 
   exoscale_key = var.exoscale_key

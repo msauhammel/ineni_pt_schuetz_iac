@@ -21,7 +21,7 @@ resource "exoscale_dbaas" "pg" {
 
 resource "exoscale_dbaas_pg_database" "employee-db" {
   # Creates a PostgreSQL database named "employee-db" in the above service
-  database_name = "employee-db"
+  database_name = var.database_name
   service       = exoscale_dbaas.pg.name
   zone          = exoscale_dbaas.pg.zone
 }
@@ -41,7 +41,7 @@ data "exoscale_database_uri" "employee-db" {
 
 resource "kubernetes_namespace" "tenant_namespace" {
   metadata {
-    name = var.database_name
+    name = var.kubernetes_namespace
   }
 }
 

@@ -1,6 +1,6 @@
 resource "kubernetes_secret" "pg_secret" {
   metadata {
-    name      = var.database_name
+    name      = "pg-secret"
     namespace = var.kubernetes_namespace
   }
 
@@ -13,4 +13,8 @@ resource "kubernetes_secret" "pg_secret" {
   }
 
   type = "Opaque"
+
+  depends_on = [
+    exoscale_dbaas_pg_database.employee-db
+  ]
 }
