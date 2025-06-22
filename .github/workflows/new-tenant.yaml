@@ -85,6 +85,9 @@ jobs:
             # (Optional) Override default names
             database_name          = "${TENANT_NAME}"
             kubernetes_namespace   = "${TENANT_NAME}"
+
+            exoscale_key    = var.exoscale_key
+            exoscale_secret = var.exoscale_secret
           }
 
           EOF
