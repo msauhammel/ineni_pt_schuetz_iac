@@ -3,3 +3,4 @@ terraform/*/terraform.tfvars
 terraform/kubeconfig
 terraform/*/terraform.tfstate
 terraform/*/terraform.tfstate.backup
+terraform/**/*.tfstate
