@@ -45,19 +45,6 @@ jobs:
         run: |
           curl -fsSL https://raw.githubusercontent.com/exoscale/cli/master/install-latest.sh | sh
 
-      - name: Fetch SKS kubeconfig and store
-        # Fetch the kubeconfig for the first SKS cluster and store it for kubectl use
-        continue-on-error: true
-        run: |
-          export EXOSCALE_API_KEY="${{ secrets.EXOSCALE_KEY }}"
-          export EXOSCALE_API_SECRET="${{ secrets.EXOSCALE_SECRET }}"
-
-          CLUSTER_NAME=$(exo compute sks list --zone at-vie-2 --output-format json | jq -r '.[0].name')
-          exo compute sks kubeconfig "$CLUSTER_NAME" admin --zone at-vie-2 | tail -n +2 > kubeconfig
-
-          chmod 600 kubeconfig
-          echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
-
       - name: Install OpenTofu
         # Set up the specified version of OpenTofu
         uses: opentofu/setup-opentofu@v1
@@ -98,3 +85,7 @@ jobs:
         run: |
           cd cluster
           tofu destroy -auto-approve
+
+      - name: Delete all Load Balancers
+        run: |
+          exo compute load-balancer list --output-format json | jq -r '.[].id' | xargs -n 1 exo compute load-balancer delete -z at-vie-2  --force
