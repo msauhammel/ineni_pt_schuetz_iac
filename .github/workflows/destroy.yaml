@@ -101,4 +101,7 @@ jobs:
 
       - name: Delete all Load Balancers
         run: |
+          export EXOSCALE_API_KEY="${{ secrets.EXOSCALE_KEY }}"
+          export EXOSCALE_API_SECRET="${{ secrets.EXOSCALE_SECRET }}"
+          
           exo compute load-balancer list --output-format json | jq -r '.[].id' | xargs -n 1 exo compute load-balancer delete -z at-vie-2  --force
