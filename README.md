@@ -50,7 +50,7 @@ Der Status der gesamten Infrastruktur wird als Code verwaltet, was selbst bei ei
 
 ### Architekturdiagramm
 
-![alt text](readme-figures/architecture.png) 
+![alt text](readme-figures/architecture.png)
 
 ### Pipelineabbildung
 
