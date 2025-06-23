@@ -25,15 +25,3 @@ variable "sks_service_level" {
   description = "Service level for the SKS cluster"
   default     = "starter"
 }
-
-variable "pg_admin" {
-  description = "Admin username for PostgreSQL"
-  type        = string
-  default     = "admin"
-
-}
-
-variable "pg_password" {
-  description = "Amin password for PostgreSQL"
-  type        = string
-}
