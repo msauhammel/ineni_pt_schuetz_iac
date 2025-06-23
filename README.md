@@ -66,19 +66,19 @@ New Tenant Pipeline:
 Für die Realisierung unseres Projekts kamen zahlreiche moderne Technologien und Werkzeuge zum Einsatz. Nachfolgend eine Übersicht der verwendeten Technologien:
 
 | **Kategorie** | **angewandte Technologie** |
-|:----------:|:----------:|
-| **Versionierung**   |  Git   |
-| **CI/CD**   |  Github Actions   |
-| **Programmiersprachen**   |  Java, TypeScript  |
-| **Framework**   |  SpringBoot, Angular  |
-| **Infrastrukturbereitstellung**   |  Opentofu  |
-| **Cloud-Provider**   |  Exoscale  |
-| **Orchistrierugstool**   |  Kubernetes  |
-| **Container Runtime**   |  Docker  |
-| **Applikationsdeployment**   |  Helm  |
-| **Authentifizierungsmethode**   |  OAuth2  |
-| **Authentifizierungsprovider**   |  GitHub  |
-| **Container Registry**   |  DockerHub  |
+|:----------:|:--------------------------:|
+| **Versionierung**   |            Git             |
+| **CI/CD**   |       Github Actions       |
+| **Programmiersprachen**   |      Java, TypeScript      |
+| **Framework**   |    SpringBoot, Angular     |
+| **Infrastrukturbereitstellung**   |          Opentofu          |
+| **Cloud-Provider**   |          Exoscale          |
+| **Orchistrierugstool**   |         Kubernetes         |
+| **Container Runtime**   |           Docker           |
+| **Applikationsdeployment**   |            Helm            |
+| **Authentifizierungsmethode**   |           OAuth2           |
+| **Authentifizierungsprovider**   |           GitHub           |
+| **Container Registry**   |           GitHub           |
 
 ### Verwendung
 
