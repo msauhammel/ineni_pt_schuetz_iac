@@ -5,8 +5,8 @@ resource "kubernetes_secret" "pg_secret" {
   }
 
   data = {
-    username    = var.pg_admin
-    password    = var.pg_password
+    username    = exoscale_dbaas_pg_user.appuser.username
+    password    = exoscale_dbaas_pg_user.appuser.password
     connection_string = "jdbc:postgresql://${data.exoscale_database_uri.employee-db.host}:${data.exoscale_database_uri.employee-db.port}/defaultdb"
     db_host           = data.exoscale_database_uri.employee-db.host
     db_port           = data.exoscale_database_uri.employee-db.port

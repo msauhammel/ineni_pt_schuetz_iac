@@ -40,6 +40,6 @@ variable "pg_admin" {
 }
 
 variable "pg_password" {
-  description = "Amin password for PostgreSQL"
+  description = "Admin password for PostgreSQL"
   type        = string
 }

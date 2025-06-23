@@ -37,7 +37,31 @@ data "exoscale_database_uri" "employee-db" {
   name = var.database_name
   type = "pg"
   zone = exoscale_dbaas.pg.zone
+  depends_on = [
+    exoscale_dbaas_pg_database.employee-db,
+    exoscale_dbaas_pg_user.appuser
+  ]
 }
+
+provider "postgresql" {
+  host            = data.exoscale_database_uri.employee-db.host
+  port            = data.exoscale_database_uri.employee-db.port
+  username        = var.pg_admin
+  password        = var.pg_password
+  database        = var.database_name
+  sslmode         = "require"
+}
+
+resource "postgresql_grant" "schema_usage" {
+  database    = "defaultdb"
+  role        = exoscale_dbaas_pg_user.appuser.username
+  schema      = "public"
+  object_type = "schema"
+  privileges  = ["USAGE", "CREATE"]
+
+  depends_on = [data.exoscale_database_uri.employee-db]
+}
+
 
 resource "kubernetes_namespace" "tenant_namespace" {
   metadata {
